@@ -24,7 +24,6 @@ $products = $result->fetch_all(MYSQLI_ASSOC);
     <title>Products</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Custom styles for product cards */
         .card {
             transition: transform 0.2s;
         }
@@ -34,17 +33,17 @@ $products = $result->fetch_all(MYSQLI_ASSOC);
         }
 
         .card-img-top {
-            height: 200px; /* Fixed height for images */
-            object-fit: cover; /* Maintain aspect ratio */
+            height: 200px;
+            object-fit: cover;
         }
 
         .btn-custom {
-            background-color: #28a745; /* Custom green color */
+            background-color: #28a745;
             color: white;
         }
 
         .btn-custom:hover {
-            background-color: #218838; /* Darker green on hover */
+            background-color: #218838;
         }
     </style>
 </head>

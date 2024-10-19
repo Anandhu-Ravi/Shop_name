@@ -1,0 +1,39 @@
+CREATE DATABASE IF NOT EXISTS my_shop;
+USE my_shop;
+
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    quantity INT NOT NULL
+);
+
+CREATE TABLE cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    product_id INT,
+    quantity INT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+ALTER TABLE products
+ADD COLUMN image VARCHAR(255) AFTER quantity;
+
+INSERT INTO products (name, description, price, quantity, image) 
+VALUES ('Brake Pads', 'High-quality brake pads', 49.99, 100, 'brake_pads.jpg');
+
+INSERT INTO products (name, description, price, quantity, image) VALUES
+('Car Tire', 'A high-quality car tire with long-lasting tread.', 120.00, 10, 'car_tire.jpg'),
+('Engine Oil', 'Synthetic engine oil, 5W-30, 1 quart.', 30.00, 50, 'engine_oil.jpg'),
+('Turbo Charger', 'High performance turbo charger.', 299.99, 15, 'turbo_charger.jpg');
+

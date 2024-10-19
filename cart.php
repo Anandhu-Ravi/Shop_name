@@ -12,13 +12,11 @@ $database = new Database();
 $db = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if we are adding an item to the cart
     if (isset($_POST['add_to_cart'])) {
         $user_id = $_SESSION['user']['id'];
         $product_id = $_POST['product_id'];
         $quantity = $_POST['quantity'];
 
-        // Check product availability
         $query = "SELECT quantity FROM products WHERE id = ?";
         $stmt = $db->prepare($query);
         $stmt->bind_param("i", $product_id);
@@ -28,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->close();
 
         if ($quantity <= $available_quantity) {
-            // Add product to the cart
             $query = "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)";
             $stmt = $db->prepare($query);
             $stmt->bind_param("iii", $user_id, $product_id, $quantity);
@@ -38,35 +35,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Check if we are deleting an item from the cart
     if (isset($_POST['delete_item'])) {
         $cart_id = $_POST['cart_id'];
 
-        // Delete product from the cart
         $query = "DELETE FROM cart WHERE id = ?";
         $stmt = $db->prepare($query);
         $stmt->bind_param("i", $cart_id);
         $stmt->execute();
     }
 
-    // Check if we are buying all items in the cart
     if (isset($_POST['buy_now'])) {
-        // Process the order (for simplicity, we're just clearing the cart)
         $user_id = $_SESSION['user']['id'];
 
-        // Clear the user's cart after purchase
         $query = "DELETE FROM cart WHERE user_id = ?";
         $stmt = $db->prepare($query);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
 
-        // Display success message and redirect to products page
         echo "<script>alert('Order Successful!'); window.location.href='products.php';</script>";
         exit;
     }
 }
 
-// Fetch cart items for the user
 $query = "SELECT c.id as cart_id, p.name, p.price, c.quantity 
           FROM cart c 
           JOIN products p ON c.product_id = p.id 
@@ -103,7 +93,6 @@ $cart_items = $result->fetch_all(MYSQLI_ASSOC);
         </ul>
 
         <?php if (count($cart_items) > 0): ?>
-            <!-- Add Buy Now button -->
             <form method="POST" action="cart.php" class="mt-4">
                 <button type="submit" name="buy_now" class="btn btn-success w-100">Buy Now</button>
             </form>
