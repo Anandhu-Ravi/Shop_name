@@ -48,6 +48,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param("i", $cart_id);
         $stmt->execute();
     }
+
+    // Check if we are buying all items in the cart
+    if (isset($_POST['buy_now'])) {
+        // Process the order (for simplicity, we're just clearing the cart)
+        $user_id = $_SESSION['user']['id'];
+
+        // Clear the user's cart after purchase
+        $query = "DELETE FROM cart WHERE user_id = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+
+        // Display success message and redirect to products page
+        echo "<script>alert('Order Successful!'); window.location.href='products.php';</script>";
+        exit;
+    }
 }
 
 // Fetch cart items for the user
@@ -85,6 +101,15 @@ $cart_items = $result->fetch_all(MYSQLI_ASSOC);
                 </li>
             <?php endforeach; ?>
         </ul>
+
+        <?php if (count($cart_items) > 0): ?>
+            <!-- Add Buy Now button -->
+            <form method="POST" action="cart.php" class="mt-4">
+                <button type="submit" name="buy_now" class="btn btn-success w-100">Buy Now</button>
+            </form>
+        <?php else: ?>
+            <p class="text-center mt-4">Your cart is empty.</p>
+        <?php endif; ?>
     </div>
 </body>
 </html>
